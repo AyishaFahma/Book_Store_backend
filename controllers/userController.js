@@ -57,26 +57,31 @@ exports.registerController = async(req , res)=>{
 // login logic
 
 exports.loginController = async ( req, res ) => {
+    // here only email and password is taken from user
     const {email , password} = req.body
     console.log(email , password);
 
     try {
-
+        // db yil users collectionil email nnu paranja keyil user thanna reqil ulla email value ndo check cheyyanu , here key and value are same
         const existingUser = await users.findOne( {email})
 
         if( existingUser){
 
-
+            // email exist aaneel oru document aanu theraa so existing user nnu paranja documentinte(object) password keyil user kodtha password same anoo check cheyyum
             if(existingUser.password == password){
+                // sign(secret data, secret key) is used to create token
                 const token = jwt.sign( {userMail:existingUser.email} , process.env.JWTSECRETKEY)
+                // object ayitt frontendilekk send cheyyanu evide key and value same aanu , so onnu kodthal mathi
                 res.status(200).json( {existingUser , token})
             }
+            // if password not match
             else{
                 res.status(403).json('Invalid credentials')
             }
+
         }
         else{
-            res.status(406).json('User Does not Exist, Please Register')
+            res.status(406).json('User Doesnot Exist, Please Register')
         }
         
     } catch (error) {
