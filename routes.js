@@ -19,7 +19,8 @@ const routes = new express.Router()
 routes.post('/register' , userController.registerController) 
 // ie. frontendil ninnu /register pathil ninnu request veraaneel ath registerController nnu paranja function nte logic ne base cheyth resolve cheyyan parayanu
 
-
+// path to login
+routes.post('/login' , userController.loginController)
 
 
 

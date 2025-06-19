@@ -1,12 +1,28 @@
-// import express to create server
+//import dotenv module to load environment variable
+require('dotenv').config() // config method is to load .env file contents into process.env
 
+
+// import express to create server
 const express = require('express')
+
 
 // import cors to connect the frontend with server
 const cors = require('cors')
 
+
 // import routes
 const routes = require('./routes')
+
+
+// import or invoke connection file
+// server um aayi database connect cheyyanu in index.js coz this is the only file that is running
+require('./connection')
+
+
+
+
+ 
+
 
 // create server
 const bookstoreserver = express()
@@ -16,7 +32,7 @@ const bookstoreserver = express()
 // use cors to connect with the frontend
 bookstoreserver.use(cors())
 
-//parse the json data
+//parse the json data , coz axios aanu use cheyyunnath axios aytomatically json ayitt data ne convert cheythittundavm athine aanu parse cheythath
 bookstoreserver.use(express.json())
 
 // server
