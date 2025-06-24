@@ -7,6 +7,15 @@ const express = require('express')
 //import that register function
 const userController = require('./controllers/userController.js')
 
+//import book
+const bookController = require('./controllers/bookController.js')
+
+//import middleware
+const jwt = require('./middleware/jwtMiddleware.js')
+
+// import multer 
+const multerConfig = require('./middleware/multerMiddleware.js')
+
 // there is a class called router , that class is gives the path, so inorder to access the class we need instance/ obj
 const routes = new express.Router()
 
@@ -21,6 +30,15 @@ routes.post('/register' , userController.registerController)
 
 // path to login
 routes.post('/login' , userController.loginController)
+
+
+
+//-----------------------------USER-------------------
+
+
+//path to add book
+// here we give the jwt middleware coz we want to use the middleware in this perticular path
+routes.post('/add-book' , jwt , multerConfig.array('uploadImages' , 3) , bookController.addBookController)
 
 
 
