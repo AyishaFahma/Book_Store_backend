@@ -10,7 +10,7 @@ const userController = require('./controllers/userController.js')
 //import book
 const bookController = require('./controllers/bookController.js')
 
-//import middleware
+//import router specific middleware
 const jwt = require('./middleware/jwtMiddleware.js')
 
 // import multer 
@@ -32,14 +32,27 @@ routes.post('/register' , userController.registerController)
 routes.post('/login' , userController.loginController)
 
 
+// path to get all 4 newly added book in homepage
+// here this homepage is for both admin and user
+routes.get('/home-books' , bookController.homeBookController)
+
+
+
 
 //-----------------------------USER-------------------
 
 
 //path to add book
-// here we give the jwt middleware coz we want to use the middleware in this perticular path
+// here we give the jwt router specific middleware coz we want to use the middleware in this perticular path for token verification
+// and after that control goes to multer here uploadImages keyilanu files ullath athanu reqbodyil pass cheythittullath so aa key kodkka and max image is 3
 routes.post('/add-book' , jwt , multerConfig.array('uploadImages' , 3) , bookController.addBookController)
 
+
+//path to get all books - user
+routes.get('/all-books-user' , jwt , bookController.getAllBookUserController)
+
+//path to view book
+routes.get('/view-book/:id' , bookController.viewBookController)
 
 
 //export this routes to connect with index.js
