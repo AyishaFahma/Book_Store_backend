@@ -56,7 +56,16 @@ const bookschema = new mongoose.Schema( {
     userMail :{
         type:String,
         required:true
+    },
+    status:{
+        type:String,
+        default:"Pending"
+    },
+    BroughtBy:{
+        type:String,
+        default:""
     }
+
 
 })
 

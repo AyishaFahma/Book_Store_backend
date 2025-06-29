@@ -75,16 +75,33 @@ exports.homeBookController = async(req , res) => {
 
 
 
-
-
-// controller to get all books in userside
+// controller to get all books in userside in Book page 
 
 exports.getAllBookUserController = async(req,res) => {
+
+    // to get the search item from input
+    const {search} = req.query
+    console.log(search);
+
+
+    // only other user add cheytha book mathre oru user nu kanan pattu
+
+    const userMail = req.payload
+    
 
 
     try {
 
-        const allBooksUser = await books.find()
+        const query = {
+            title: {
+                $regex:search , $options:"i"
+            },
+            userMail : {
+                $ne:userMail
+            }
+        }
+
+        const allBooksUser = await books.find(query)
         res.status(200).json(allBooksUser)
         
     } catch (error) {
@@ -96,16 +113,55 @@ exports.getAllBookUserController = async(req,res) => {
 
 
 // get a perticular book when viewbook button click by user
+// here we need id for uniqly find each book
 
 exports.viewBookController = async(req, res) => {
+
+    //id use cheythanu data ne fetch cheyyunnath, and id will be send as a parameter. so here request nte params nnu aanu id ne access cheyyendath
     const {id} = req.params
     console.log(id);
     
-
     try {
 
         const specificBook = await books.findOne( {_id:id})
         res.status(200).json(specificBook)
+        
+    } catch (error) {
+        res.status(500).json(error)
+        
+    }
+}
+
+
+// get all user added book(user sell cheyyan vendi add cheytha book)
+
+exports.getAllUserAddedBooksController = async(req, res) => {
+
+    const userMail = req.payload
+
+    try {
+
+        const allUserBooks = await books.find( {userMail})
+        res.status(200).json(allUserBooks)
+        
+    } catch (error) {
+        res.status(500).json(error)
+        
+    }
+}
+
+
+
+// get all books brought by user
+
+exports.getAllUserBroughtBooksController = async(req, res) => {
+
+    const userMail = req.payload
+
+    try {
+
+        const allUserBroughtBooks = await books.find( {BroughtBy:userMail})
+        res.status(200).json(allUserBroughtBooks)
         
     } catch (error) {
         res.status(500).json(error)

@@ -51,8 +51,19 @@ routes.post('/add-book' , jwt , multerConfig.array('uploadImages' , 3) , bookCon
 //path to get all books - user
 routes.get('/all-books-user' , jwt , bookController.getAllBookUserController)
 
-//path to view book
+
+//path to view a perticular book when viewbook button click
+//id kodkkunna data ayirikkum controlleril verunnath
 routes.get('/view-book/:id' , bookController.viewBookController)
+
+
+
+//path
+routes.get('/all-user-added-books' , jwt , bookController.getAllUserAddedBooksController)
+
+
+
+routes.get('/all-user-brought-books' , jwt , bookController.getAllUserBroughtBooksController)
 
 
 //export this routes to connect with index.js
