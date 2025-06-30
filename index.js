@@ -40,8 +40,8 @@ bookstoreserver.use(routes)
 
 
 //nammal upload cheytha images eppo Imageuploads folder ilanu ullath so athine frontendil kittenam athinu vendi
-// express.static() method is used to export 
-bookstoreserver.use('/imgUpload' , express.static('/Imageuploads'))
+// express.static() method is used to export the folder from server 
+bookstoreserver.use('/imgUpload' , express.static('./Imageuploads'))
 
 
 //port number setting

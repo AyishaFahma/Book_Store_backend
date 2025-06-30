@@ -80,6 +80,7 @@ exports.homeBookController = async(req , res) => {
 exports.getAllBookUserController = async(req,res) => {
 
     // to get the search item from input
+    // search key aanu allapi yil kodthath so athil aanu data kitta
     const {search} = req.query
     console.log(search);
 
@@ -93,9 +94,11 @@ exports.getAllBookUserController = async(req,res) => {
     try {
 
         const query = {
+            // regex - search key and title match anoo check cheyyum. option for casesensitivity nullify
             title: {
                 $regex:search , $options:"i"
             },
+            // oru user add cheythath ayalkk kanan padilla
             userMail : {
                 $ne:userMail
             }
@@ -167,4 +170,23 @@ exports.getAllUserBroughtBooksController = async(req, res) => {
         res.status(500).json(error)
         
     }
+}
+
+
+// to delete a perticular book sell by the user , here user is deleting the book
+exports.deleteABookController = async(req, res) => {
+    const {id} = req.params
+    console.log(id);
+
+
+    try {
+
+        await books.findByIdAndDelete( {_id:id})
+        res.status(200).json('Deleted')
+        
+    } catch (error) {
+        res.status(500).json(error)
+        
+    }
+    
 }

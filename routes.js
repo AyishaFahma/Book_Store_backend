@@ -58,12 +58,17 @@ routes.get('/view-book/:id' , bookController.viewBookController)
 
 
 
-//path
+//path to view book (sell status)
+//path to get all user added book
 routes.get('/all-user-added-books' , jwt , bookController.getAllUserAddedBooksController)
 
 
-
+//path to get all user brought book
 routes.get('/all-user-brought-books' , jwt , bookController.getAllUserBroughtBooksController)
+
+
+//path to delete a book
+routes.delete('/delete-book/:id' , bookController.deleteABookController)
 
 
 //export this routes to connect with index.js
