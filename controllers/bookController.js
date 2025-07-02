@@ -80,7 +80,7 @@ exports.homeBookController = async(req , res) => {
 exports.getAllBookUserController = async(req,res) => {
 
     // to get the search item from input
-    // search key aanu allapi yil kodthath so athil aanu data kitta
+    // search key aanu all api yil kodthath so athil aanu data kitta
     const {search} = req.query
     console.log(search);
 
@@ -190,3 +190,64 @@ exports.deleteABookController = async(req, res) => {
     }
     
 }
+
+
+
+// ------------------ADMIN-----------------
+
+
+// to get all books
+exports.getAllBookController = async(req, res) => {
+    try {
+        const allBooks = await books.find()
+        res.status(200).json(allBooks)
+        
+    } catch (error) {
+
+        res.status(500).json(error)
+        
+    }
+}
+
+
+// approve book by admin
+exports.approveBookController = async(req, res)=>{
+
+    const {id} = req.params
+    console.log(id);
+    
+    try {
+
+        const existingBook = await books.findOne({_id:id})
+
+
+        //update
+        const UpdatedBook = await books.findByIdAndUpdate({_id:id} , {
+
+            title:existingBook.title,
+            author:existingBook.author,
+            publisher:existingBook.publisher,
+            language:existingBook.language,
+            noofpages:existingBook.noofpages,
+            isbn:existingBook.isbn,
+            imageUrl:existingBook.imageUrl,
+            category:existingBook.category,
+            price:existingBook.price,
+            dprice:existingBook.dprice,
+            abstract:existingBook.abstract,
+            uploadImages:existingBook.uploadImages,
+            userMail:existingBook.userMail,
+            status:'Approved',
+            BroughtBy:existingBook.BroughtBy
+
+        } , {new:true})
+        res.status(200).json(UpdatedBook)
+        
+    } catch (error) {
+        res.status(500).json(error)
+        
+    }
+}
+
+
+

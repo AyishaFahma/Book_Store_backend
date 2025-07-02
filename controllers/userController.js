@@ -90,3 +90,33 @@ exports.loginController = async ( req, res ) => {
     }
     
 }
+
+
+
+// ------------------ADMIN----------------------------
+
+
+// get all users
+
+exports.getAllUserController = async(req,res)=>{
+
+    // to remove admin from the usercollection when get using find method
+
+    const query = {
+        email:{
+            $ne:'admin@gmail.com'
+        }
+    }
+
+    try {
+
+        const allUsers = await users.find(query)
+        res.status(200).json(allUsers)
+
+        
+    } catch (error) {
+        res.status(500).json(error)
+        
+    }
+
+}

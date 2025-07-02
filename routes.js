@@ -10,6 +10,9 @@ const userController = require('./controllers/userController.js')
 //import book
 const bookController = require('./controllers/bookController.js')
 
+//import job
+const jobController = require('./controllers/jobController.js')
+
 //import router specific middleware
 const jwt = require('./middleware/jwtMiddleware.js')
 
@@ -35,6 +38,10 @@ routes.post('/login' , userController.loginController)
 // path to get all 4 newly added book in homepage
 // here this homepage is for both admin and user
 routes.get('/home-books' , bookController.homeBookController)
+
+
+//path to get all jobs in both user and admin side
+routes.get('/all-jobs' , jobController.getAllJobsController)
 
 
 
@@ -69,6 +76,26 @@ routes.get('/all-user-brought-books' , jwt , bookController.getAllUserBroughtBoo
 
 //path to delete a book
 routes.delete('/delete-book/:id' , bookController.deleteABookController)
+
+
+
+// --------------------ADMIN----------------------------
+
+
+//path to get all books in admin side for approval or rejection
+routes.get('/all-books' , bookController.getAllBookController)
+
+
+//path to approve a book by admin button click
+routes.put('/approve-Book/:id' , bookController.approveBookController)
+
+
+//path to get all users in admin side
+routes.get('/all-users' , userController.getAllUserController)
+
+
+//path to add a new job
+routes.post('/add-job' , jobController.addJobController)
 
 
 //export this routes to connect with index.js
