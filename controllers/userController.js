@@ -92,6 +92,44 @@ exports.loginController = async ( req, res ) => {
 }
 
 
+//update the profile
+exports.updateProfileController = async(req, res)=>{
+
+    const userMail = req.payload
+    console.log(userMail);
+
+
+    const {username , password , bio , profile} = req.body
+    console.log(username , password , bio , profile);
+
+
+
+    //if user update the profile photo it can access from only req files coz of it active multer . otherwise it store previous value in profile
+
+    pro = req.file ? req.file.filename : profile
+    console.log(pro);
+
+
+
+    try {
+
+        const updatedprofile = await users.findOneAndUpdate({email:userMail} , {
+            username,
+            email:userMail,
+            password,
+            bio,
+            profile:pro
+
+        } , {new:true})
+
+        res.status(200).json(updatedprofile)
+        
+    } catch (error) {
+        res.status(500).json(error)
+    }    
+    
+}
+
 
 // ------------------ADMIN----------------------------
 

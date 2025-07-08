@@ -43,6 +43,9 @@ bookstoreserver.use(routes)
 // express.static() method is used to export the folder from server 
 bookstoreserver.use('/imgUpload' , express.static('./Imageuploads'))
 
+//pdf uploads
+bookstoreserver.use('/pdfUploads' , express.static('./pdfUploads'))
+
 
 //port number setting
 const PORT = 4000 || process.env.PORT

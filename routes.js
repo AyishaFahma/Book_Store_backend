@@ -13,11 +13,16 @@ const bookController = require('./controllers/bookController.js')
 //import job
 const jobController = require('./controllers/jobController.js')
 
+const applicationController = require('./controllers/appController.js')
+
 //import router specific middleware
 const jwt = require('./middleware/jwtMiddleware.js')
 
 // import multer 
 const multerConfig = require('./middleware/multerMiddleware.js')
+
+//import pdf middleware
+const pdfMulterConfig = require('./middleware/pdfMulterMiddleware.js')
 
 // there is a class called router , that class is gives the path, so inorder to access the class we need instance/ obj
 const routes = new express.Router()
@@ -42,6 +47,10 @@ routes.get('/home-books' , bookController.homeBookController)
 
 //path to get all jobs in both user and admin side
 routes.get('/all-jobs' , jobController.getAllJobsController)
+
+
+//path to edit the profile
+routes.put('/edit-profile' , jwt , multerConfig.single('profile') , userController.updateProfileController)
 
 
 
@@ -78,6 +87,9 @@ routes.get('/all-user-brought-books' , jwt , bookController.getAllUserBroughtBoo
 routes.delete('/delete-book/:id' , bookController.deleteABookController)
 
 
+//path to add a application
+routes.post('/add-application',jwt, pdfMulterConfig.single("resume") ,applicationController.addApplicationsController)
+
 
 // --------------------ADMIN----------------------------
 
@@ -96,6 +108,14 @@ routes.get('/all-users' , userController.getAllUserController)
 
 //path to add a new job
 routes.post('/add-job' , jobController.addJobController)
+
+
+// path to delete a job by admin
+routes.delete('/delete-job/:id' , jobController.deleteJobController)
+
+
+//path to get all application
+routes.get('/all-application' , applicationController.getAllApplicationController)
 
 
 //export this routes to connect with index.js

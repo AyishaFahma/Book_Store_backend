@@ -36,10 +36,35 @@ exports.addJobController = async(req, res)=>{
 
 // get all jobs
 exports.getAllJobsController = async(req, res)=>{
+    
+    const {search} = req.query
+    console.log(search);
+    
+    try {
+
+        const allJobs = await jobs.find( {
+            title:{
+                $regex: search , $options : "i"
+            }
+        })
+        res.status(200).json(allJobs)
+        
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+// to delete a job
+exports.deleteJobController = async(req, res)=>{
+
+    const {id} = req.params
+    console.log(id);
+    
 
     try {
-        const allJobs = await jobs.find()
-        res.status(200).json(allJobs)
+
+        await jobs.findByIdAndDelete( {_id:id} )
+        res.status(200).json('Deleted')
         
     } catch (error) {
         res.status(500).json(error)
