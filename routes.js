@@ -40,6 +40,10 @@ routes.post('/register' , userController.registerController)
 routes.post('/login' , userController.loginController)
 
 
+//path to google login
+routes.post('/google-login' , userController.googleLoginController)
+
+
 // path to get all 4 newly added book in homepage
 // here this homepage is for both admin and user
 routes.get('/home-books' , bookController.homeBookController)

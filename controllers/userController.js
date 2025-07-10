@@ -9,11 +9,11 @@ const jwt = require('jsonwebtoken');
 
 
 //logic to register
-exports.registerController = async(req , res)=>{
+exports.registerController = async (req, res) => {
     // logic 
     // username, email,password are get from request frontend while registering
-    const {username , password , email } = req.body
-    console.log(username , password , email);
+    const { username, password, email } = req.body
+    console.log(username, password, email);
     // res.status(200).json('req recieved') /* postman vech test cheyyanu req res proper ayi work cheyyunnundonnu */
 
     /* now data kittindu so eni logic implement cheyyanam , ee data already db yil ndoo check cheyyanam ellel store cheyyanam , athinu vendi nammak structure create cheyyanam so db yumayi communicate cheyyan data ne store cheyyenda structure paranj kodkkan modal venm in mvc arch so that in model folder*/
@@ -24,21 +24,21 @@ exports.registerController = async(req , res)=>{
     try {
 
         // already user existing anoo check cheyyanam so here email is the unique data in users collection in atlas db
-        const existingUser = await users.findOne( {email})
+        const existingUser = await users.findOne({ email })
 
         // findOne return either that document if it present or null
 
-        if(existingUser){
+        if (existingUser) {
             res.status(406).json('User Already exist')
         }
-        else{
+        else {
             // add this newuser into db
             // here the coming req and db yil store cheyyenda keyum same ayathondu aanu onnum mathram kodthe . incase eppo req bodyile data name aneel username: name kodkkanam
             // and profile & bio kodkkanda coz value default ayitt set cheythittundu
 
-            const newUser = new users( {
-                username ,
-                email ,
+            const newUser = new users({
+                username,
+                email,
                 password
             })
             // to save in mongodb
@@ -46,115 +46,154 @@ exports.registerController = async(req , res)=>{
             res.status(200).json(newUser)
 
         }
-        
+
     } catch (error) {
 
         res.status(500).json(error)
-        
-    }   
+
+    }
 }
 
 // login logic
 
-exports.loginController = async ( req, res ) => {
+exports.loginController = async (req, res) => {
     // here only email and password is taken from user
-    const {email , password} = req.body
-    console.log(email , password);
+    const { email, password } = req.body
+    console.log(email, password);
 
     try {
         // db yil users collectionil email nnu paranja keyil user thanna reqil ulla email value ndo check cheyyanu , here key and value are same
-        const existingUser = await users.findOne( {email})
+        const existingUser = await users.findOne({ email })
 
-        if( existingUser){
+        if (existingUser) {
 
             // email exist aaneel oru document aanu theraa so existing user nnu paranja documentinte(object) password keyil user kodtha password same anoo check cheyyum
-            if(existingUser.password == password){
+            if (existingUser.password == password) {
                 // sign(secret data, secret key) is used to create token
-                const token = jwt.sign( {userMail:existingUser.email} , process.env.JWTSECRETKEY)
+                const token = jwt.sign({ userMail: existingUser.email }, process.env.JWTSECRETKEY)
                 // object ayitt frontendilekk send cheyyanu evide key and value same aanu , so onnu kodthal mathi
-                res.status(200).json( {existingUser , token})
+                res.status(200).json({ existingUser, token })
             }
             // if password not match
-            else{
+            else {
                 res.status(403).json('Invalid credentials')
             }
 
         }
-        else{
+        else {
             res.status(406).json('User Doesnot Exist, Please Register')
         }
-        
+
     } catch (error) {
         res.status(500).json(error)
-        
+
     }
-    
+
 }
+
+
+//google login
+exports.googleLoginController = async (req, res) => {
+
+    const { username, password, email, photo } = req.body
+    console.log(username, password, email, photo);
+
+
+    try {
+
+        const existingUser = await users.findOne({ email })
+
+        if (existingUser) {
+
+                const token = jwt.sign({ userMail: existingUser.email }, process.env.JWTSECRETKEY)
+                // object ayitt frontendilekk send cheyyanu evide key and value same aanu , so onnu kodthal mathi
+                res.status(200).json({ existingUser, token })
+            }
+            else{
+                const newUser = new users( {
+                    username,
+                    email,
+                    password,
+                    profile:photo
+                })
+                await newUser.save()
+
+                const token = jwt.sign( { userMail:email }, process.env.JWTSECRETKEY)
+                res.status(200).json( {existingUser:newUser , token})
+            }
+
+
+
+        } catch (error) {
+            res.status(500).json(error)
+        }
+
+    }
 
 
 //update the profile
-exports.updateProfileController = async(req, res)=>{
+exports.updateProfileController = async (req, res) => {
 
-    const userMail = req.payload
-    console.log(userMail);
-
-
-    const {username , password , bio , profile} = req.body
-    console.log(username , password , bio , profile);
+        const userMail = req.payload
+        console.log(userMail);
 
 
-
-    //if user update the profile photo it can access from only req files coz of it active multer . otherwise it store previous value in profile
-
-    pro = req.file ? req.file.filename : profile
-    console.log(pro);
+        const { username, password, bio, profile } = req.body
+        console.log(username, password, bio, profile);
 
 
 
-    try {
+        //if user update the profile photo it can access from only req files coz of it active multer . otherwise it store previous value in profile
 
-        const updatedprofile = await users.findOneAndUpdate({email:userMail} , {
-            username,
-            email:userMail,
-            password,
-            bio,
-            profile:pro
-
-        } , {new:true})
-
-        res.status(200).json(updatedprofile)
-        
-    } catch (error) {
-        res.status(500).json(error)
-    }    
-    
-}
+        pro = req.file ? req.file.filename : profile
+        console.log(pro);
 
 
-// ------------------ADMIN----------------------------
 
+        try {
 
-// get all users
+            const updatedprofile = await users.findOneAndUpdate({ email: userMail }, {
+                username,
+                email: userMail,
+                password,
+                bio,
+                profile: pro
 
-exports.getAllUserController = async(req,res)=>{
+            }, { new: true })
 
-    // to remove admin from the usercollection when get using find method
+            res.status(200).json(updatedprofile)
 
-    const query = {
-        email:{
-            $ne:'admin@gmail.com'
+        } catch (error) {
+            res.status(500).json(error)
         }
+
     }
 
-    try {
 
-        const allUsers = await users.find(query)
-        res.status(200).json(allUsers)
+    // ------------------ADMIN----------------------------
 
-        
-    } catch (error) {
-        res.status(500).json(error)
-        
+
+    // get all users
+
+    exports.getAllUserController = async (req, res) => {
+
+        // to remove admin from the usercollection when get using find method
+
+        const query = {
+            email: {
+                $ne: 'admin@gmail.com'
+            }
+        }
+
+        try {
+
+            const allUsers = await users.find(query)
+            res.status(200).json(allUsers)
+
+
+        } catch (error) {
+            res.status(500).json(error)
+
+        }
+
     }
-
-}
