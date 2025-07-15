@@ -278,9 +278,14 @@ exports.paymentController = async (req, res) => {
             line_items: line_item,
             mode: 'payment',
             //payment success ayaal move cheyyenda path
-            success_url: 'http://localhost:5173/payment-success',
+            // success_url: 'http://localhost:5173/payment-success',
+
+            success_url: 'https://book-store-tan-nine.vercel.app/payment-success',
+
             //cancel path
-            cancel_url: 'http://localhost:5173/payment-error'
+            // cancel_url: 'http://localhost:5173/payment-error'
+
+            cancel_url: 'https://book-store-tan-nine.vercel.app/payment-error'
         })
 
         console.log(session);
