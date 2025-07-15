@@ -94,6 +94,9 @@ routes.delete('/delete-book/:id' , bookController.deleteABookController)
 //path to add a application
 routes.post('/add-application',jwt, pdfMulterConfig.single("resume") ,applicationController.addApplicationsController)
 
+//path to make payment
+routes.put('/make-payment' , jwt, bookController.paymentController)
+
 
 // --------------------ADMIN----------------------------
 
