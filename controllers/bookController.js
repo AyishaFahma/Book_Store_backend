@@ -104,6 +104,9 @@ exports.getAllBookUserController = async (req, res) => {
             // oru user add cheythath ayalkk kanan padilla
             userMail: {
                 $ne: userMail
+            },
+            status: {
+                $ne: 'sold'
             }
         }
 
